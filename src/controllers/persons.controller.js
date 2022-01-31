@@ -1,4 +1,4 @@
-const personModel = require('../models/personModel');
+const personModel = require('../models/person.model');
 
 //Function for listing all persons on database
 exports.personsList = async (req, res) => {
@@ -20,11 +20,12 @@ exports.personsList = async (req, res) => {
 //Function for creating a new person on the database
 exports.savePerson = async (req, res) => {
     try{
+        console.log({...req.body});
         //Calling create method from personModel and passing variables by destructuring object from req.body
         const person = await personModel.create({...req.body});
     
         //Sending status 200 showing that it was successfully written in the database
-        res.status(200).json({
+        res.status(201).json({
             status: 'ok',
             result: person
         });
@@ -56,7 +57,25 @@ exports.update = async (req, res) => {
             updated_fields: result
         });
     }catch (err) {
-        res.status(400).send('Algo salió mal: '+ err)
+        res.status(400).send('Algo salió mal: '+ err);
+    }
+}
+
+exports.delete = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await personModel.destroy({
+            where: {
+                person_id: id
+            }
+        });
+
+        res.status(200).json({
+            status: 'ok',
+            result: result
+        });
+    } catch (error) {
+        res.status(400).send('Algo salió mal: '+ err);
     }
 }
 

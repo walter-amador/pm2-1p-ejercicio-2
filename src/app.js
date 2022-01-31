@@ -27,6 +27,4 @@ app.get('/', function (req, res) {
 //Second example route
 app.use("/api/", require('./routes'));
 
-//Persons example route (Code will be refactored on next releases)
-app.use("/api/persons/", require('./routes/personsRoutes'));
 
