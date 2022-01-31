@@ -1,15 +1,15 @@
-const personModel = require('../models/person.model');
+const productTypeModel = require('./../models/productType.model');
 
 //Function for listing all persons on database
-exports.personsList = async (req, res) => {
+exports.all = async (req, res) => {
     try {
         
-        //Calling findAll from personModel to retrieve all rows in the database
-        const personList = await personModel.findAll();
+        //Calling findAll from productTypeModel to retrieve all rows in the database
+        const types = await productTypeModel.findAll();
     
         res.status(200).json({
             status: 'ok',
-            persons: personList
+            types: types
         });
     } catch (error) {
         console.error(error);
@@ -18,16 +18,15 @@ exports.personsList = async (req, res) => {
 };
 
 //Function for creating a new person on the database
-exports.savePerson = async (req, res) => {
+exports.new = async (req, res) => {
     try{
-        console.log({...req.body});
-        //Calling create method from personModel and passing variables by destructuring object from req.body
-        const person = await personModel.create({...req.body});
+        //Calling create method from productTypeModel and passing variables by destructuring object from req.body
+        const type = await productTypeModel.create({...req.body});
     
         //Sending status 200 showing that it was successfully written in the database
         res.status(201).json({
             status: 'ok',
-            result: person
+            result: type
         });
     }catch(err){
         console.log(err);
@@ -44,16 +43,13 @@ exports.update = async (req, res) => {
     try{
         //Calling update function and passing a destructuring of req.body with the fields to update
         //Second parameter receives a where clause to specify the person_id of the row that wants to be updated
-        const result = await personModel.update({...req.body}, {
-            where: {
-                person_id: id
-            }
-        });
+        const productType = await productTypeModel.findByPk(id);
+        const result = await productType.update({...req.body});
 
         //Responding by showing that the fields have been updated successfully
         res.status(200).json({
             status: 'ok',
-            person_id: id,
+            product_type_id: id,
             updated_fields: result
         });
     }catch (err) {
@@ -64,7 +60,7 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
     const { id } = req.params;
     try {
-        const person = await personModel.findByPk(id);
+        const person = await productTypeModel.findByPk(id);
 
         if(!person){
             throw new Error('No se encontró el id');
@@ -81,9 +77,4 @@ exports.delete = async (req, res) => {
             error
         });
     }
-}
-
-//Function for testing purposes only
-exports.initiate = (req, res) => {
-    res.send('Hello, you are located at the persons controller');
 }
